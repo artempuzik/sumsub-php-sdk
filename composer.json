@@ -1,0 +1,45 @@
+{
+    "name": "artempuzik/sumsub-php-sdk",
+    "description": "Complete PHP SDK for Sumsub KYC/AML verification service with DTOs, Resources, Enums and Webhook handling",
+    "type": "library",
+    "keywords": ["sumsub", "kyc", "aml", "verification", "identity"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Artem Puzik",
+            "email": "artem.puzik.it@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "SumsubSdk\\Sumsub\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SumsubSdk\\Sumsub\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite=Unit",
+        "test:feature": "phpunit --testsuite=Feature",
+        "test:integration": "phpunit --group=integration",
+        "test:coverage": "phpunit --coverage-html coverage"
+    }
+}
+
