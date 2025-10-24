@@ -15,9 +15,11 @@ class DocumentCollectionTest extends TestCase
     private function createDocumentResource(string $imageId, ReviewAnswer $answer, string $type = 'IDENTITY'): DocumentResource
     {
         $data = new DocumentData(
+            number: null,
+            validUntil: null,
+            idDocType: 'PASSPORT',
             imageId: $imageId,
             docSetType: $type,
-            idDocType: 'PASSPORT',
             country: 'USA',
             reviewAnswer: $answer,
             attemptId: null,

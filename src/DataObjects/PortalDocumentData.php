@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SumsubSdk\Sumsub\DataObjects;
 
+
+use SumsubSdk\Sumsub\Resources\DocumentCollection;
 /**
  * Portal Document Data DTO
  */
@@ -14,10 +16,29 @@ readonly class PortalDocumentData
         public ?string $number,
         public ?string $country,
         public ?string $expiry_date,
-        public ?string $front,
-        public ?string $back,
-        public ?string $face,
+        public ?string $front = null,
+        public ?string $back = null,
+        public ?string $face = null,
     ) {}
+
+    /**
+     * Create from document images (base64 encoded)
+     */
+    public static function make(
+        DocumentData $document,
+        DocumentCollection $documents
+    ): self {
+        return new self(
+            type: self::mapDocumentType($document->idDocType),
+            number: $document->number,
+            country: $document->country,
+            expiry_date: $document->validUntil,
+            front: $documents->frontBase64(),
+            back: $documents->backBase64(),
+            face: $documents->faceBase64(),
+        );
+    }
+
 
     /**
      * Create from document images (base64 encoded)

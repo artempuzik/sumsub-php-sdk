@@ -36,6 +36,7 @@ class DocumentResource
             'is_approved' => $this->document->isApproved(),
             'is_rejected' => $this->document->isRejected(),
             'requires_review' => $this->document->requiresReview(),
+            'base64' => $this->document->base64Image,
         ];
     }
 
@@ -57,6 +58,14 @@ class DocumentResource
     public function getData(): DocumentData
     {
         return $this->document;
+    }
+
+        /**
+     * Get underlying data object
+     */
+    public function base64(): string
+    {
+        return $this->document->base64Image;
     }
 }
 

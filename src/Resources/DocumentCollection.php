@@ -91,5 +91,20 @@ class DocumentCollection
     {
         return $this->documents;
     }
+
+    public function frontBase64(): ?string
+    {
+        return $this->documents[0]?->base64() ?? null;
+    }
+
+    public function backBase64(): ?string
+    {
+        return $this->documents[1]?->base64() ?? null;
+    }
+
+    public function faceBase64(): ?string
+    {
+        return $this->documents[2]?->base64() ?? null;
+    }
 }
 

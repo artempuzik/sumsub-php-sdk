@@ -47,5 +47,15 @@ enum DocumentType: string
             self::RESIDENCE_PERMIT
         ]);
     }
+
+    public function getLabel(): string
+    {
+        return match($this) {
+            self::ID_CARD => 'ID Card',
+            self::PASSPORT => 'Passport',
+            self::DRIVERS => 'Driver\'s License',
+            self::RESIDENCE_PERMIT => 'Residence Permit',
+        };
+    }
 }
 

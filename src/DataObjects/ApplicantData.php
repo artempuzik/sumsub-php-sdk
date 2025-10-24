@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace SumsubSdk\Sumsub\DataObjects;
 
 use SumsubSdk\Sumsub\Enums\ApplicantType;
-use SumsubSdk\Sumsub\Enums\ReviewStatus;
-use SumsubSdk\Sumsub\Enums\ReviewAnswer;
 
 /**
  * Applicant data object

@@ -13,13 +13,16 @@ use SumsubSdk\Sumsub\Enums\ReviewAnswer;
 readonly class DocumentData
 {
     public function __construct(
-        public string $imageId,
-        public string $docSetType,
-        public ?string $idDocType = null,
+        public ?string $number,
+        public ?string $validUntil,
+        public string $idDocType,
+        public ?string $imageId = null,
+        public ?string $docSetType = null,
         public ?string $country = null,
         public ?ReviewAnswer $reviewAnswer = null,
         public ?string $attemptId = null,
         public ?array $rawData = null,
+        public ?string $base64Image = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -32,13 +35,16 @@ readonly class DocumentData
         }
 
         return new self(
-            imageId: (string)$data['imageId'],
-            docSetType: $data['docSetType'],
+            imageId: $data['imageId'] ?? null,
+            docSetType: $data['docSetType'] ?? null,
             idDocType: $data['idDocType'] ?? null,
             country: $data['country'] ?? null,
             reviewAnswer: $reviewAnswer,
             attemptId: $data['attemptId'] ?? null,
             rawData: $data,
+            number: $data['number'] ?? null,
+            validUntil: $data['validUntil'] ?? null,
+            base64Image: $data['base64Image'] ?? null,
         );
     }
 
@@ -64,6 +70,20 @@ readonly class DocumentData
     public function requiresReview(): bool
     {
         return $this->reviewAnswer === ReviewAnswer::YELLOW;
+    }
+
+    /**
+     * Get document type number
+     */
+    public function getTypeNumber(): string
+    {
+        return match($this->idDocType) {
+            DocumentType::ID_CARD->value => '2',
+            DocumentType::PASSPORT->value => '1',
+            DocumentType::DRIVERS->value => '3',
+            DocumentType::RESIDENCE_PERMIT->value => '4',
+            default => '0',
+        };
     }
 }
 

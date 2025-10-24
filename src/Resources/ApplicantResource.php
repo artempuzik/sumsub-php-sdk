@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace SumsubSdk\Sumsub\Resources;
 
 use SumsubSdk\Sumsub\DataObjects\ApplicantData;
-
+use SumsubSdk\Sumsub\DataObjects\AddressData;
+use SumsubSdk\Sumsub\DataObjects\ApplicantInfoData;
+use SumsubSdk\Sumsub\DataObjects\DocumentData;
 /**
  * Resource for transforming applicant data
  */
@@ -50,6 +52,33 @@ class ApplicantResource
         ];
     }
 
+    public function address(AddressData $address): array
+    {
+        if (!$address) {
+            return [];
+        }
+
+        return [
+            'details' => $address->getFormatted(),
+            'country' => $address->country,
+            'city' => $address->town,
+            'post_code' => $address->postCode,
+        ];
+    }
+
+    public function individual(ApplicantInfoData $info): array
+    {
+        return [
+            'first_name' => $info->firstName,
+            'last_name' => $info->lastName,
+            'date_of_birth' => $info->dob,
+            'country' => $info->country,
+            'nationality' => $info->nationality,
+            'phone' => $info->phone,
+            'email' => $info->email,
+        ];
+    }
+
     public function getApplicantPersonalInfo(): array
     {
         if (!$this->applicant->info) {
@@ -58,42 +87,12 @@ class ApplicantResource
 
         $info = $this->applicant->info;
         $data = [
+            'email' => $info->email,
             'user_name' => $info->getFullName(),
-            'individual' => [
-                'first_name' => $info->firstName,
-                'last_name' => $info->lastName,
-                'date_of_birth' => $info->dob,
-                'country' => $info->country,
-                'nationality' => $info->nationality,
-                'phone' => $info->phone,
-                'email' => $info->email,
-            ],
+            'individual' => $this->individual($info),
+            'address' => $this->address($info->address),
+            'document' => $this->getDocumentInfo($info->rawData['idDocs'][0]),
         ];
-
-        if ($info->address) {
-            $data['address'] = [
-                'details' => $info->address->getFormatted(),
-                'country' => $info->address->country,
-                'city' => $info->address->town,
-                'post_code' => $info->address->postCode,
-            ];
-        }
-
-        if ($info->rawData['idDocs']) {
-            $data['document'] = [
-                'type' => $info->rawData['idDocs'][0]['idDocType'],
-                'number' => $info->rawData['idDocs'][0]['number'],
-                'country' => $info->rawData['idDocs'][0]['country'],
-                'expiry_date' => $info->rawData['idDocs'][0]['validUntil'],
-                // 'front' => $info->rawData['idDocs'][0]['mrzLine1'],
-                // 'back' => $info->rawData['idDocs'][0]['mrzLine2'],
-                // 'face' => $info->rawData['idDocs'][0]['mrzLine3'],
-            ];
-
-            foreach ($info->rawData['idDocs'] as $doc) {
-                $data['document']['front'][] = ;
-            }
-        }
 
         return $data;
     }
@@ -199,6 +198,27 @@ class ApplicantResource
     public function getData(): ApplicantData
     {
         return $this->applicant;
+    }
+
+    /**
+     * Get formatted document info array
+     */
+    private function getDocumentInfo(array $document): ?array
+    {
+        if (!$document) {
+            return [];
+        }
+
+        $doc = DocumentData::fromArray($document);
+
+        return [
+            'type' => $doc->getTypeNumber(),
+            'number' => $doc->number,
+            'country' => $doc->country,
+            'expiry_date' => $doc->validUntil,
+            'doc_type' => $doc->idDocType,
+            'doc' => $doc
+        ];
     }
 }
 

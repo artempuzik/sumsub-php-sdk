@@ -31,9 +31,11 @@ class DocumentDataTest extends TestCase
     public function test_is_approved_returns_correct_value()
     {
         $approved = new DocumentData(
+            number: null,
+            validUntil: null,
+            idDocType: 'PASSPORT',
             imageId: 'img-1',
             docSetType: 'IDENTITY',
-            idDocType: 'PASSPORT',
             country: 'USA',
             reviewAnswer: ReviewAnswer::GREEN,
             attemptId: null,
@@ -41,9 +43,11 @@ class DocumentDataTest extends TestCase
         );
 
         $rejected = new DocumentData(
+            number: null,
+            validUntil: null,
+            idDocType: 'PASSPORT',
             imageId: 'img-2',
             docSetType: 'IDENTITY',
-            idDocType: 'PASSPORT',
             country: 'USA',
             reviewAnswer: ReviewAnswer::RED,
             attemptId: null,
@@ -57,9 +61,11 @@ class DocumentDataTest extends TestCase
     public function test_is_rejected_returns_correct_value()
     {
         $rejected = new DocumentData(
+            number: null,
+            validUntil: null,
+            idDocType: 'PASSPORT',
             imageId: 'img-1',
             docSetType: 'IDENTITY',
-            idDocType: 'PASSPORT',
             country: 'USA',
             reviewAnswer: ReviewAnswer::RED,
             attemptId: null,
@@ -72,9 +78,11 @@ class DocumentDataTest extends TestCase
     public function test_requires_review_returns_correct_value()
     {
         $yellow = new DocumentData(
+            number: null,
+            validUntil: null,
+            idDocType: 'PASSPORT',
             imageId: 'img-1',
             docSetType: 'IDENTITY',
-            idDocType: 'PASSPORT',
             country: 'USA',
             reviewAnswer: ReviewAnswer::YELLOW,
             attemptId: null,

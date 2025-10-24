@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace SumsubSdk\Sumsub\DataObjects;
 
+use SumsubSdk\Sumsub\Resources\DocumentCollection;
 /**
  * Portal User Data DTO
  * Formatted data for external portal integration
  */
-readonly class PortalUserData
+class PortalUserData
 {
     public function __construct(
         public string $user_xid,
@@ -22,33 +23,27 @@ readonly class PortalUserData
     /**
      * Create from Sumsub applicant data
      */
-    public static function fromApplicantData(ApplicantData $applicant): self
+    public static function fromApplicantData(ApplicantData $applicant, DocumentCollection $documents): self
     {
         $info = $applicant->info;
+        $document = $info->rawData['idDocs'][0];
 
         return new self(
             user_xid: $applicant->externalUserId,
             email: $info?->email,
-            user_name: self::generateUsername($info),
+            user_name: $info->getFullName(),
             individual: $info ? PortalIndividualData::fromApplicantInfo($info) : null,
             address: $info?->address ? PortalAddressData::fromAddressData($info->address) : null,
-            document: null, // Will be populated separately from documents
+            document: $document ? PortalDocumentData::make(DocumentData::fromArray($document), $documents) : null,
         );
     }
 
     /**
-     * Generate username from applicant info
+     * Set portal data email
      */
-    private static function generateUsername(?ApplicantInfoData $info): ?string
+    public function setEmail(string $email)
     {
-        if (!$info || !$info->firstName) {
-            return null;
-        }
-
-        $firstName = strtolower($info->firstName);
-        $lastName = strtolower($info->lastName ?? '');
-
-        return $firstName . ($lastName ? $lastName : '');
+        $this->email = $email;
     }
 
     /**

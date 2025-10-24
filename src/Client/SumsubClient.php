@@ -6,10 +6,8 @@ namespace SumsubSdk\Sumsub\Client;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use SumsubSdk\Sumsub\Exceptions\ApiException;
-use SumsubSdk\Sumsub\DataObjects\ApplicantData;
 use SumsubSdk\Sumsub\DataObjects\DocumentData;
 use SumsubSdk\Sumsub\Resources\ApplicantResource;
 use SumsubSdk\Sumsub\Resources\DocumentCollection;
@@ -110,7 +108,7 @@ class SumsubClient
      * @return DocumentCollection Collection of documents
      * @throws ApiException
      */
-    public function getDocuments(string $applicantId): DocumentCollection
+    public function getDocuments(string $applicantId, string $inspectionId): DocumentCollection
     {
         $statusData = $this->getApplicantStatus($applicantId);
         $documents = [];
@@ -126,6 +124,7 @@ class SumsubClient
                         'reviewResult' => $docSetData['reviewResult'] ?? null,
                         'imageReviewResult' => $docSetData['imageReviewResults'][$imageId] ?? null,
                         'attemptId' => $docSetData['attemptId'] ?? null,
+                        'base64Image' => $this->getDocumentImageBase64($inspectionId, $imageId),
                     ]);
                 }
             }
@@ -138,11 +137,11 @@ class SumsubClient
      * Get document image as binary data
      *
      * @param string $inspectionId Sumsub inspection ID
-     * @param string $imageId Document image ID
+     * @param int $imageId Document image ID
      * @return string Binary image data (JPEG)
      * @throws ApiException
      */
-    public function getDocumentImage(string $inspectionId, string $imageId): string
+    public function getDocumentImage(string $inspectionId, int $imageId): string
     {
         $url = "/resources/inspections/{$inspectionId}/resources/{$imageId}";
         return $this->requestRaw('GET', $url);
@@ -152,16 +151,15 @@ class SumsubClient
      * Get document image as base64 encoded string
      *
      * @param string $inspectionId Sumsub inspection ID
-     * @param string $imageId Document image ID
+     * @param int $imageId Document image ID
      * @param bool $withDataUri Include data URI prefix (data:image/jpeg;base64,)
      * @return string Base64 encoded image
      * @throws ApiException
      */
-    public function getDocumentImageBase64(string $inspectionId, string $imageId, bool $withDataUri = true): string
+    public function getDocumentImageBase64(string $inspectionId, int $imageId, bool $withDataUri = true): string
     {
         $imageData = $this->getDocumentImage($inspectionId, $imageId);
         $base64 = base64_encode($imageData);
-
         return $withDataUri ? 'data:image/jpeg;base64,' . $base64 : $base64;
     }
 
