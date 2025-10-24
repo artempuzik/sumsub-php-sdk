@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0] - 2025-10-24
+
+### Added
+- Added `number` and `validUntil` fields to `DocumentData` for complete document information
+- Added `setEmail()` method to `PortalUserData` for updating email addresses
+- Added return type declarations (`: ?string`) to base64 methods in `DocumentCollection`
+
+### Fixed
+- Fixed unit tests for `DocumentData` to include required `number` and `validUntil` parameters
+- Fixed unit tests for `DocumentCollection` to properly initialize document data
+
+### Changed
+- Changed `PortalUserData` from readonly to mutable class to support email updates
+- Enhanced document handling with base64 image retrieval methods
+- Improved type safety with explicit return type declarations
+
 ## [1.0.0] - 2025-10-23
 
 ### Added
