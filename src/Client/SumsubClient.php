@@ -137,15 +137,32 @@ class SumsubClient
     /**
      * Get document image as binary data
      *
-     * @param string $applicantId Sumsub applicant ID
+     * @param string $inspectionId Sumsub inspection ID
      * @param string $imageId Document image ID
      * @return string Binary image data (JPEG)
      * @throws ApiException
      */
-    public function getDocumentImage(string $applicantId, string $imageId): string
+    public function getDocumentImage(string $inspectionId, string $imageId): string
     {
-        $url = "/resources/applicants/{$applicantId}/document/{$imageId}";
+        $url = "/resources/inspections/{$inspectionId}/resources/{$imageId}";
         return $this->requestRaw('GET', $url);
+    }
+
+    /**
+     * Get document image as base64 encoded string
+     *
+     * @param string $inspectionId Sumsub inspection ID
+     * @param string $imageId Document image ID
+     * @param bool $withDataUri Include data URI prefix (data:image/jpeg;base64,)
+     * @return string Base64 encoded image
+     * @throws ApiException
+     */
+    public function getDocumentImageBase64(string $inspectionId, string $imageId, bool $withDataUri = true): string
+    {
+        $imageData = $this->getDocumentImage($inspectionId, $imageId);
+        $base64 = base64_encode($imageData);
+
+        return $withDataUri ? 'data:image/jpeg;base64,' . $base64 : $base64;
     }
 
     /**

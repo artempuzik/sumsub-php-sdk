@@ -85,10 +85,14 @@ class ApplicantResource
                 'number' => $info->rawData['idDocs'][0]['number'],
                 'country' => $info->rawData['idDocs'][0]['country'],
                 'expiry_date' => $info->rawData['idDocs'][0]['validUntil'],
-                'front' => $info->rawData['idDocs'][0]['mrzLine1'],
-                'back' => $info->rawData['idDocs'][0]['mrzLine2'],
-                'face' => $info->rawData['idDocs'][0]['mrzLine3'],
+                // 'front' => $info->rawData['idDocs'][0]['mrzLine1'],
+                // 'back' => $info->rawData['idDocs'][0]['mrzLine2'],
+                // 'face' => $info->rawData['idDocs'][0]['mrzLine3'],
             ];
+
+            foreach ($info->rawData['idDocs'] as $doc) {
+                $data['document']['front'][] = ;
+            }
         }
 
         return $data;

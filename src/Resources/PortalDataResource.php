@@ -53,31 +53,40 @@ class PortalDataResource
                 $backImage = null;
                 $faceImage = null;
 
-                // Get identity document images
+                // Get identity document images using base64 method
                 if ($identityDocs->count() > 0) {
                     $identityImages = $identityDocs->all();
 
                     if (isset($identityImages[0])) {
-                        $imageId = $identityImages[0]->getData()->imageId;
-                        $imageData = $client->getDocumentImage($applicantData->id, $imageId);
-                        $frontImage = base64_encode($imageData);
+                        try {
+                            $imageId = $identityImages[0]->getData()->imageId;
+                            $frontImage = $client->getDocumentImageBase64($applicantData->inspectionId, $imageId, true);
+                        } catch (\Exception $e) {
+                            // Skip if image retrieval fails
+                        }
                     }
 
                     if (isset($identityImages[1])) {
-                        $imageId = $identityImages[1]->getData()->imageId;
-                        $imageData = $client->getDocumentImage($applicantData->id, $imageId);
-                        $backImage = base64_encode($imageData);
+                        try {
+                            $imageId = $identityImages[1]->getData()->imageId;
+                            $backImage = $client->getDocumentImageBase64($applicantData->inspectionId, $imageId, true);
+                        } catch (\Exception $e) {
+                            // Skip if image retrieval fails
+                        }
                     }
                 }
 
-                // Get selfie image
+                // Get selfie image using base64 method
                 if ($selfieDocs->count() > 0) {
                     $selfieImages = $selfieDocs->all();
 
                     if (isset($selfieImages[0])) {
-                        $imageId = $selfieImages[0]->getData()->imageId;
-                        $imageData = $client->getDocumentImage($applicantData->id, $imageId);
-                        $faceImage = base64_encode($imageData);
+                        try {
+                            $imageId = $selfieImages[0]->getData()->imageId;
+                            $faceImage = $client->getDocumentImageBase64($applicantData->inspectionId, $imageId, true);
+                        } catch (\Exception $e) {
+                            // Skip if image retrieval fails
+                        }
                     }
                 }
 
@@ -138,4 +147,3 @@ class PortalDataResource
         return json_encode($this->toArray(), $options);
     }
 }
-
