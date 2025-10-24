@@ -50,6 +50,50 @@ class ApplicantResource
         ];
     }
 
+    public function getApplicantPersonalInfo(): array
+    {
+        if (!$this->applicant->info) {
+            return [];
+        }
+
+        $info = $this->applicant->info;
+        $data = [
+            'user_name' => $info->getFullName(),
+            'individual' => [
+                'first_name' => $info->firstName,
+                'last_name' => $info->lastName,
+                'date_of_birth' => $info->dob,
+                'country' => $info->country,
+                'nationality' => $info->nationality,
+                'phone' => $info->phone,
+                'email' => $info->email,
+            ],
+        ];
+
+        if ($info->address) {
+            $data['address'] = [
+                'details' => $info->address->getFormatted(),
+                'country' => $info->address->country,
+                'city' => $info->address->town,
+                'post_code' => $info->address->postCode,
+            ];
+        }
+
+        if ($info->rawData['idDocs']) {
+            $data['document'] = [
+                'type' => $info->rawData['idDocs'][0]['idDocType'],
+                'number' => $info->rawData['idDocs'][0]['number'],
+                'country' => $info->rawData['idDocs'][0]['country'],
+                'expiry_date' => $info->rawData['idDocs'][0]['validUntil'],
+                'front' => $info->rawData['idDocs'][0]['mrzLine1'],
+                'back' => $info->rawData['idDocs'][0]['mrzLine2'],
+                'face' => $info->rawData['idDocs'][0]['mrzLine3'],
+            ];
+        }
+
+        return $data;
+    }
+
     /**
      * Get verification status string
      */
